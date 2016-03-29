@@ -40,6 +40,8 @@
         <http:listener config-ref="HTTP_Listener_Configuration" path="employee/*" />
 		<echo-component />
         <logger level="INFO" message="#[payload]"/>
+        <http:response-builder status="200" contentType="application/json" />
+        <set-payload value="{&quot;value&quot;:&quot;success&quot;}" />
     </flow>
 
 </mule>
