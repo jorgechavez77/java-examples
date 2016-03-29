@@ -25,32 +25,36 @@ package org.hibernate.tutorial.em;
 
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Illustrates basic use of Hibernate as a JPA provider.
  *
  * @author Steve Ebersole
  */
-public class EntityManagerIllustrationTest extends TestCase {
+public class EntityManagerIllustrationTest {
 	private EntityManagerFactory entityManagerFactory;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		// like discussed with regards to SessionFactory, an EntityManagerFactory is set up once for an application
 		// 		IMPORTANT: notice how the name here matches the name we gave the persistence-unit in persistence.xml!
 		entityManagerFactory = Persistence.createEntityManagerFactory( "org.hibernate.tutorial.jpa" );
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		entityManagerFactory.close();
 	}
 
+	@Test
 	public void testBasicUsage() {
 		// create a couple of events...
 		EntityManager entityManager = entityManagerFactory.createEntityManager();

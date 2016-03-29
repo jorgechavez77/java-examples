@@ -31,19 +31,20 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Illustrates use of Hibernate native APIs.
  *
  * @author Steve Ebersole
  */
-public class NativeApiIllustrationTest extends TestCase {
+public class NativeApiIllustrationTest {
 	private SessionFactory sessionFactory;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		// A SessionFactory is set up once for an application!
 		final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
 				.configure() // configures settings from hibernate.cfg.xml
@@ -58,14 +59,14 @@ public class NativeApiIllustrationTest extends TestCase {
 		}
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		if ( sessionFactory != null ) {
 			sessionFactory.close();
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@Test
 	public void testBasicUsage() {
 		// create a couple of events...
 		Session session = sessionFactory.openSession();

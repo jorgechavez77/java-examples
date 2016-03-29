@@ -31,8 +31,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Illustrates the use of Hibernate native APIs.  The code here is unchanged from the {@code basic} example, the
@@ -40,11 +41,11 @@ import junit.framework.TestCase;
  *
  * @author Steve Ebersole
  */
-public class AnnotationsIllustrationTest extends TestCase {
+public class AnnotationsIllustrationTest {
 	private SessionFactory sessionFactory;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		// A SessionFactory is set up once for an application!
 		final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
 				.configure() // configures settings from hibernate.cfg.xml
@@ -59,14 +60,14 @@ public class AnnotationsIllustrationTest extends TestCase {
 		}
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		if ( sessionFactory != null ) {
 			sessionFactory.close();
 		}
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@Test
 	public void testBasicUsage() {
 		// create a couple of events...
 		Session session = sessionFactory.openSession();
@@ -79,7 +80,7 @@ public class AnnotationsIllustrationTest extends TestCase {
 		// now lets pull events from the database and list them
 		session = sessionFactory.openSession();
         session.beginTransaction();
-        List result = session.createQuery( "from Event" ).list();
+        List<?> result = session.createQuery( "from Event" ).list();
 		for ( Event event : (List<Event>) result ) {
 			System.out.println( "Event (" + event.getDate() + ") : " + event.getTitle() );
 		}

@@ -25,14 +25,17 @@ package org.hibernate.tutorial.envers;
 
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import junit.framework.TestCase;
-
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Illustrates the set up and use of Envers.
@@ -42,21 +45,22 @@ import org.hibernate.envers.AuditReaderFactory;
  *
  * @author Steve Ebersole
  */
-public class EnversIllustrationTest extends TestCase {
+public class EnversIllustrationTest {
 	private EntityManagerFactory entityManagerFactory;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		// like discussed with regards to SessionFactory, an EntityManagerFactory is set up once for an application
 		// 		IMPORTANT: notice how the name here matches the name we gave the persistence-unit in persistence.xml!
 		entityManagerFactory = Persistence.createEntityManagerFactory( "org.hibernate.tutorial.envers" );
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		entityManagerFactory.close();
 	}
 
+	@Test
 	public void testBasicUsage() {
 		// create a couple of events
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -91,14 +95,14 @@ public class EnversIllustrationTest extends TestCase {
 		entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		myEvent = entityManager.find( Event.class, 2L );
-		assertEquals( "A follow up event (rescheduled)", myEvent.getTitle() );
+		Assert.assertEquals( "A follow up event (rescheduled)", myEvent.getTitle() );
 		AuditReader reader = AuditReaderFactory.get( entityManager );
 		Event firstRevision = reader.find( Event.class, 2L, 1 );
-		assertFalse( firstRevision.getTitle().equals( myEvent.getTitle() ) );
-		assertFalse( firstRevision.getDate().equals( myEvent.getDate() ) );
+		Assert.assertFalse( firstRevision.getTitle().equals( myEvent.getTitle() ) );
+		Assert.assertFalse( firstRevision.getDate().equals( myEvent.getDate() ) );
 		Event secondRevision = reader.find( Event.class, 2L, 2 );
-		assertTrue( secondRevision.getTitle().equals( myEvent.getTitle() ) );
-		assertTrue( secondRevision.getDate().equals( myEvent.getDate() ) );
+		Assert.assertTrue( secondRevision.getTitle().equals( myEvent.getTitle() ) );
+		Assert.assertTrue( secondRevision.getDate().equals( myEvent.getDate() ) );
 		entityManager.getTransaction().commit();
         entityManager.close();
 	}
